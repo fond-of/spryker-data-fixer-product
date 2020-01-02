@@ -4,7 +4,6 @@ namespace FondOfSpryker\Zed\DataFixerProduct\Persistence;
 
 use Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer;
 use Propel\Runtime\ActiveQuery\ModelCriteria;
-use Propel\Runtime\Collection\ObjectCollection;
 use Spryker\Zed\Kernel\Persistence\AbstractRepository;
 
 /**
@@ -12,11 +11,10 @@ use Spryker\Zed\Kernel\Persistence\AbstractRepository;
  */
 class DataFixerProductRepository extends AbstractRepository implements DataFixerProductRepositoryInterface
 {
-
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilterTransfer
-     * @return array|\Orm\Zed\Availability\Persistence\SpyAvailability[]|\Propel\Runtime\Collection\ObjectCollection
-     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
+     *
+     * @return \Orm\Zed\Availability\Persistence\SpyAvailability[]|\Propel\Runtime\Collection\ObjectCollection
      */
     public function getWrongStoreAvailabilities(
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
@@ -29,8 +27,9 @@ class DataFixerProductRepository extends AbstractRepository implements DataFixer
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilterTransfer
-     * @return array|\Orm\Zed\Oms\Persistence\SpyOmsProductReservation[]|\Propel\Runtime\Collection\ObjectCollection
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
+     *
+     * @return \Orm\Zed\Oms\Persistence\SpyOmsProductReservation[]|\Propel\Runtime\Collection\ObjectCollection
      */
     public function getWrongStoreReservations(
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
@@ -43,8 +42,10 @@ class DataFixerProductRepository extends AbstractRepository implements DataFixer
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilterTransfer
-     * @param  \Propel\Runtime\ActiveQuery\ModelCriteria  $query
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
+     * @param \Propel\Runtime\ActiveQuery\ModelCriteria $query
+     *
+     * @return void
      */
     protected function createFilter(
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer,

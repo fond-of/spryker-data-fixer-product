@@ -18,7 +18,6 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  */
 class ProductAvailabilityAndReservationDataFixerPlugin extends AbstractPlugin implements DataFixerPluginInterface
 {
-
     /**
      * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
      */
@@ -26,5 +25,4 @@ class ProductAvailabilityAndReservationDataFixerPlugin extends AbstractPlugin im
     {
         return $this->getFactory()->createProductAvailabilityAndReservationDataFixer();
     }
-
 }

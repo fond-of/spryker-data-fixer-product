@@ -7,13 +7,9 @@
 
 namespace FondOfSpryker\Zed\DataFixerProduct\Persistence;
 
-use Orm\Zed\Availability\Persistence\SpyAvailability;
-use Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract;
 use Orm\Zed\Availability\Persistence\SpyAvailabilityAbstractQuery;
 use Orm\Zed\Availability\Persistence\SpyAvailabilityQuery;
-use Orm\Zed\AvailabilityStorage\Persistence\SpyAvailabilityStorage;
 use Orm\Zed\AvailabilityStorage\Persistence\SpyAvailabilityStorageQuery;
-use Orm\Zed\Oms\Persistence\SpyOmsProductReservation;
 use Orm\Zed\Oms\Persistence\SpyOmsProductReservationQuery;
 use Spryker\Zed\Kernel\Persistence\AbstractPersistenceFactory;
 

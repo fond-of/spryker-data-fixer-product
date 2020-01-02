@@ -9,5 +9,4 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
  */
 class DataFixerProductFacade extends AbstractFacade implements DataFixerProductFacadeInterface
 {
-    
 }

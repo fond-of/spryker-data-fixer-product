@@ -8,3 +8,19 @@
 ```
 composer require fond-of-spryker/data-fixer-product
 ```
+
+Register ProductAvailabilityAndReservationDataFixerPlugin in DataFixerDependencyProvider
+
+```
+/**
+ * @param \Spryker\Zed\Kernel\Container $container
+ *
+ * @return array
+ */
+public function getDataFixer(Container $container): array
+{
+    return [
+        new ProductAvailabilityAndReservationDataFixerPlugin()
+    ];
+}
+```

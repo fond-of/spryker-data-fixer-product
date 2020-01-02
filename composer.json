@@ -10,10 +10,11 @@
   ],
   "require": {
     "php": ">=7.1",
-    "fond-of-spryker/data-fixer": "dev-master",
     "spryker/availability": "^6.3.0",
     "spryker/availability-storage": "^1.2.0",
-    "spryker/oms": "^8.4.0"
+    "spryker/oms": "^8.4.0",
+    "fond-of-spryker/product": "~1.1.0",
+    "fond-of-spryker/data-fixer": "^1.0.0"
   },
   "require-dev": {
     "spryker/code-sniffer": "^0.11",

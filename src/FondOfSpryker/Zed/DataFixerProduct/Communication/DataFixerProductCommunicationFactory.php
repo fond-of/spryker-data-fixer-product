@@ -6,8 +6,6 @@ use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Business\Fixer\ProductAvailabilityAndReservationDataFixer;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductDependencyProvider;
 use FondOfSpryker\Zed\Product\Business\ProductFacadeInterface;
-use Spryker\Client\AvailabilityStorage\AvailabilityStorageClientInterface;
-use Spryker\Service\UtilEncoding\UtilEncodingService;
 use Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface;
 use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
 
@@ -29,12 +27,12 @@ class DataFixerProductCommunicationFactory extends AbstractCommunicationFactory
             $this->getQueryContainer(),
             $this->getConfig(),
             $this->getProductFacade(),
-            $this->getAvailabilityStorageFacade());
+            $this->getAvailabilityStorageFacade()
+        );
     }
 
     /**
      * @return \FondOfSpryker\Zed\Product\Business\ProductFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getProductFacade(): ProductFacadeInterface
     {
@@ -43,7 +41,6 @@ class DataFixerProductCommunicationFactory extends AbstractCommunicationFactory
 
     /**
      * @return \Spryker\Client\AvailabilityStorage\AvailabilityStorageFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getAvailabilityStorageFacade(): AvailabilityStorageFacadeInterface
     {

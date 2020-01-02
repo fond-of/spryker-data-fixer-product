@@ -11,7 +11,7 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
     public const FACADE_AVAILABILITY_STORAGE = 'FACADE_AVAILABILITY_STORAGE';
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
+     * @param \Spryker\Zed\Kernel\Container $container
      *
      * @return \Spryker\Zed\Kernel\Container
      */
@@ -33,7 +33,8 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
      * @return \Spryker\Zed\Kernel\Container
      */
     protected function addProductFacade(Container $container): Container
@@ -46,7 +47,8 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
     }
 
     /**
-     * @param  \Spryker\Zed\Kernel\Container  $container
+     * @param \Spryker\Zed\Kernel\Container $container
+     *
      * @return \Spryker\Zed\Kernel\Container
      */
     protected function addAvailabilityStorageFacade(Container $container): Container
