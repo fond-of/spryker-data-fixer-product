@@ -1,4 +1,5 @@
 <?php
+
 namespace FondOfSpryker\Zed\DataFixerProduct\Exception;
 
 use Exception;

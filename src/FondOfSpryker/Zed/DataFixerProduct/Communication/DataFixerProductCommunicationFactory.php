@@ -14,6 +14,7 @@ use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
  * @method \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainer getQueryContainer()
  * @method \FondOfSpryker\Zed\DataFixerProduct\Business\DataFixerProductFacadeInterface getFacade()
  * @method \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface getRepository()
+ * @method \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductEntityManagerInterface getEntityManager()
  */
 class DataFixerProductCommunicationFactory extends AbstractCommunicationFactory
 {

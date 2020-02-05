@@ -29,6 +29,7 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
     {
         $container = $this->addProductFacade($container);
         $container = $this->addAvailabilityStorageFacade($container);
+
         return $container;
     }
 

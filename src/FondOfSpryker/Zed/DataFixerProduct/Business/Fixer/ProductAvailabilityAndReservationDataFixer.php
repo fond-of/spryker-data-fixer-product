@@ -49,8 +49,6 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
     protected $config;
 
     /**
-     * ProductAvailabilityAndReservationDataFixer constructor.
-     *
      * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface $repository
      * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface $queryContainer
      * @param \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig $config

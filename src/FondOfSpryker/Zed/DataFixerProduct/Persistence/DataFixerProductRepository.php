@@ -19,7 +19,6 @@ class DataFixerProductRepository extends AbstractRepository implements DataFixer
     public function getWrongStoreAvailabilities(
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
     ): array {
-
         $query = $this->getFactory()->createAvailabilityQuery();
         $this->createFilter($criteriaFilterTransfer, $query);
 
@@ -34,10 +33,10 @@ class DataFixerProductRepository extends AbstractRepository implements DataFixer
     public function getWrongStoreReservations(
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer
     ): array {
-
         $query = $this->getFactory()->createOmsProductReservationQuery();
 
         $this->createFilter($criteriaFilterTransfer, $query);
+
         return $query->find()->getData();
     }
 
@@ -51,7 +50,6 @@ class DataFixerProductRepository extends AbstractRepository implements DataFixer
         DataFixerProductCriteriaFilterTransfer $criteriaFilterTransfer,
         ModelCriteria $query
     ): void {
-
         if ($criteriaFilterTransfer->getFkStore() !== null) {
             $query->filterByFkStore($criteriaFilterTransfer->getFkStore());
         }
