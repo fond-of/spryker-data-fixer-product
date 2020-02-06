@@ -41,7 +41,8 @@ class DataFixerProductCommunicationFactory extends AbstractCommunicationFactory
     }
 
     /**
-     * @return \Spryker\Client\AvailabilityStorage\AvailabilityStorageFacadeInterface
+     * @return \Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getAvailabilityStorageFacade(): AvailabilityStorageFacadeInterface
     {
