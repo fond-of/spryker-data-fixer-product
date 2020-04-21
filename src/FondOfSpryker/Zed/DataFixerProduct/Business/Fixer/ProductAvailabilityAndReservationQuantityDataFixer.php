@@ -250,7 +250,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         $product = $this->productFacade->findProductConcreteById($productId);
 
         if ($product === null) {
-            throw new ProductNotFoundException('No product concrete found with id %s', $productId);
+            throw new ProductNotFoundException(sprintf('No product concrete found with id %s in store with id %s', $productId, $idStore));
         }
 
         $store = $this->getStore($idStore);
