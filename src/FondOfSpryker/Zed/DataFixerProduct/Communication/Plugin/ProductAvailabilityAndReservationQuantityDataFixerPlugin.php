@@ -7,7 +7,7 @@ use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerPluginInterface;
 use Spryker\Zed\Kernel\Communication\AbstractPlugin;
 
 /**
- * Class ProductAvailabilityAndReservationDataFixerPlugin
+ * Class ProductAvailabilityAndReservationQuantityDataFixerPlugin
  *
  * @package FondOfSpryker\Zed\DataFixerProduct\Communication\Plugin
  *
@@ -16,13 +16,13 @@ use Spryker\Zed\Kernel\Communication\AbstractPlugin;
  * @method \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig getConfig()
  * @method \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface getQueryContainer()
  */
-class ProductAvailabilityAndReservationDataFixerPlugin extends AbstractPlugin implements DataFixerPluginInterface
+class ProductAvailabilityAndReservationQuantityDataFixerPlugin extends AbstractPlugin implements DataFixerPluginInterface
 {
     /**
      * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
      */
     public function getDataFixer(): DataFixerInterface
     {
-        return $this->getFacade()->getProductAvailabilityAndReservationDataFixer();
+        return $this->getFacade()->getProductAvailabilityAndReservationQunatityDataFixer();
     }
 }

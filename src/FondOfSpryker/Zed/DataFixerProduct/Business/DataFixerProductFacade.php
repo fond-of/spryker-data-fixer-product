@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\DataFixerProduct\Business;
 
+use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use Spryker\Zed\Kernel\Business\AbstractFacade;
 
 /**
@@ -9,4 +10,21 @@ use Spryker\Zed\Kernel\Business\AbstractFacade;
  */
 class DataFixerProductFacade extends AbstractFacade implements DataFixerProductFacadeInterface
 {
+    /**
+     * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
+     */
+    public function getProductAvailabilityAndReservationDataFixer(): DataFixerInterface
+    {
+        //ToDo not good to return whole fixer in facade, so fix it someday
+        return $this->getFactory()->createProductAvailabilityAndReservationDataFixer();
+    }
+
+    /**
+     * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
+     */
+    public function getProductAvailabilityAndReservationQunatityDataFixer(): DataFixerInterface
+    {
+        //ToDo not good to return whole fixer in facade, so fix it someday
+        return $this->getFactory()->createProductAvailabilityAndReservationQunatityDataFixer();
+    }
 }

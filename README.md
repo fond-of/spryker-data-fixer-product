@@ -11,6 +11,8 @@ composer require fond-of-spryker/data-fixer-product
 
 Register ProductAvailabilityAndReservationDataFixerPlugin in DataFixerDependencyProvider
 
+Register ProductAvailabilityAndReservationQuantityDataFixerPlugin in DataFixerDependencyProvider
+
 ```
 /**
  * @param \Spryker\Zed\Kernel\Container $container
@@ -20,7 +22,33 @@ Register ProductAvailabilityAndReservationDataFixerPlugin in DataFixerDependency
 public function getDataFixer(Container $container): array
 {
     return [
-        new ProductAvailabilityAndReservationDataFixerPlugin()
+        new ProductAvailabilityAndReservationDataFixerPlugin(),
+        new ProductAvailabilityAndReservationQuantityDataFixerPlugin(),
     ];
 }
+```
+
+## Config
+IDSTORE => ['SKUPREFIX']
+```
+// ---------- DataFixerProduct
+$config[DataFixerProductConstants::DATA_FIXER_PRODUCT_AVAILABILITY_DATA_SKU_PREFIX] = [
+    1 => ['AFZ%', 'HAP%'],
+    4 => ['PP%', 'W-%'],
+    5 => ['ERG-%'],
+    6 => ['SAT-%'],
+];
+```
+
+## Usage
+Remove all wrong availability and product reservation for current store.
+```
+vendor/bin/console data-fixer:fix -f ProductAvailabilityAndReservationWrongStoreRelationRemover
+APPLICATION_STORE=STORENAME vendor/bin/console data-fixer:fix -f ProductAvailabilityAndReservationWrongStoreRelationRemover
+```
+
+Reset all product reservations to current stock of the product for current store
+```
+vendor/bin/console data-fixer:fix -f ProductAvailabilityAndReservationQuantity
+APPLICATION_STORE=STORENAME vendor/bin/console data-fixer:fix -f ProductAvailabilityAndReservationQuantity
 ```

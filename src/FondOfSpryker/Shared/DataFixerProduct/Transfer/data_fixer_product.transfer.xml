@@ -6,5 +6,6 @@
     <transfer name="DataFixerProductCriteriaFilter">
         <property name="fkStore" type="int" />
         <property name="skus" type="array" />
+        <property name="skusCriteriaPattern" type="string" />
     </transfer>
 </transfers>
