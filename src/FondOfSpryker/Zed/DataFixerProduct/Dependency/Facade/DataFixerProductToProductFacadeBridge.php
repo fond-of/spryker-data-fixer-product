@@ -15,7 +15,7 @@ class DataFixerProductToProductFacadeBridge implements DataFixerProductToProduct
     /**
      * DataFixerProductToProductFacadeBridge constructor.
      *
-     * @param  \FondOfSpryker\Zed\Product\Business\ProductFacadeInterface  $productFacade
+     * @param \FondOfSpryker\Zed\Product\Business\ProductFacadeInterface $productFacade
      */
     public function __construct(ProductFacadeInterface $productFacade)
     {
@@ -23,7 +23,7 @@ class DataFixerProductToProductFacadeBridge implements DataFixerProductToProduct
     }
 
     /**
-     * @param  string  $sku
+     * @param string $sku
      *
      * @return int|null
      */

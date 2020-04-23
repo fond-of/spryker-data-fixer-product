@@ -10,11 +10,7 @@ use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvail
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface;
-use FondOfSpryker\Zed\Product\Business\ProductFacadeInterface;
-use Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface;
 use Spryker\Zed\Kernel\Business\AbstractBusinessFactory;
-use Spryker\Zed\Stock\Business\StockFacadeInterface;
-use Spryker\Zed\Store\Business\StoreFacadeInterface;
 
 /**
  * @method \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig getConfig()
@@ -24,7 +20,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 {
     /**
      * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function createProductAvailabilityAndReservationDataFixer(): DataFixerInterface
     {
@@ -38,8 +33,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface
-     *
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function createProductAvailabilityAndReservationQunatityDataFixer(): DataFixerInterface
     {
@@ -56,7 +49,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getProductFacade(): DataFixerProductToProductFacadeInterface
     {
@@ -65,7 +57,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getAvailabilityStorageFacade(): DataFixerProductToAvailabilityStorageFacadeInterface
     {
@@ -74,7 +65,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getStockFacade(): DataFixerProductToStockFacadeInterface
     {
@@ -83,7 +73,6 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
 
     /**
      * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface
-     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
     public function getStoreFacade(): DataFixerProductToStoreFacadeInterface
     {

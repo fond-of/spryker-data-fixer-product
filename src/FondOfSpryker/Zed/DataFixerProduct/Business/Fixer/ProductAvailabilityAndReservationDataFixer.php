@@ -8,10 +8,8 @@ use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvail
 use FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException;
 use FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface;
-use FondOfSpryker\Zed\Product\Business\ProductFacadeInterface;
 use Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer;
 use Spryker\Shared\Log\LoggerTrait;
-use Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface;
 
 class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
 {
@@ -47,10 +45,10 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
     /**
      * ProductAvailabilityAndReservationDataFixer constructor.
      *
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface  $repository
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface  $queryContainer
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig  $config
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface  $availabilityStorageFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface $repository
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface $queryContainer
+     * @param \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig $config
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade
      */
     public function __construct(
         DataFixerProductRepositoryInterface $repository,

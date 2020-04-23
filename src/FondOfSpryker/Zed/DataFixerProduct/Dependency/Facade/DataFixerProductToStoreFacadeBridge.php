@@ -15,7 +15,7 @@ class DataFixerProductToStoreFacadeBridge implements DataFixerProductToStoreFaca
     /**
      * DataFixerProductToStoreFacadeBridge constructor.
      *
-     * @param  \Spryker\Zed\Store\Business\StoreFacadeInterface  $storeFacade
+     * @param \Spryker\Zed\Store\Business\StoreFacadeInterface $storeFacade
      */
     public function __construct(StoreFacadeInterface $storeFacade)
     {
@@ -23,10 +23,9 @@ class DataFixerProductToStoreFacadeBridge implements DataFixerProductToStoreFaca
     }
 
     /**
-     * @param  int  $idStore
+     * @param int $idStore
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
-     * @throws \Spryker\Zed\Store\Business\Model\Exception\StoreNotFoundException
      */
     public function getStoreById(int $idStore): StoreTransfer
     {
