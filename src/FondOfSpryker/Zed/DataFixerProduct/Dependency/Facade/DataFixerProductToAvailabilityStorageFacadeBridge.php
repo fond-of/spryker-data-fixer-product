@@ -14,7 +14,7 @@ class DataFixerProductToAvailabilityStorageFacadeBridge implements DataFixerProd
     /**
      * DataFixerProductToAvailabilityStorageFacadeBridge constructor.
      *
-     * @param  \Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface  $availabilityStorageFacade
+     * @param \Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface $availabilityStorageFacade
      */
     public function __construct(AvailabilityStorageFacadeInterface $availabilityStorageFacade)
     {
@@ -22,7 +22,7 @@ class DataFixerProductToAvailabilityStorageFacadeBridge implements DataFixerProd
     }
 
     /**
-     * @param  array  $availabilityIds
+     * @param array $availabilityIds
      *
      * @return void
      */
@@ -32,7 +32,7 @@ class DataFixerProductToAvailabilityStorageFacadeBridge implements DataFixerProd
     }
 
     /**
-     * @param  array  $availabilityIds
+     * @param array $availabilityIds
      *
      * @return void
      */

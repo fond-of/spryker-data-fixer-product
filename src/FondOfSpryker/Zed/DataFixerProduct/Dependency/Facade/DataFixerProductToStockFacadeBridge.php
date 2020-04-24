@@ -15,7 +15,7 @@ class DataFixerProductToStockFacadeBridge implements DataFixerProductToStockFaca
     /**
      * DataFixerProductToStockFacadeBridge constructor.
      *
-     * @param  \Spryker\Zed\Stock\Business\StockFacadeInterface  $stockFacade
+     * @param \Spryker\Zed\Stock\Business\StockFacadeInterface $stockFacade
      */
     public function __construct(StockFacadeInterface $stockFacade)
     {
@@ -23,8 +23,8 @@ class DataFixerProductToStockFacadeBridge implements DataFixerProductToStockFaca
     }
 
     /**
-     * @param  int  $idProductConcrete
-     * @param  \Generated\Shared\Transfer\StoreTransfer  $storeTransfer
+     * @param int $idProductConcrete
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\StockProductTransfer[]
      */

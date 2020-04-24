@@ -7,14 +7,14 @@ use Generated\Shared\Transfer\ProductConcreteTransfer;
 interface DataFixerProductToProductFacadeInterface
 {
     /**
-     * @param  string  $sku
+     * @param string $sku
      *
      * @return int|null
      */
     public function findProductAbstractIdBySku($sku): ?int;
 
     /**
-     * @param  int  $idProduct
+     * @param int $idProduct
      *
      * @return \Generated\Shared\Transfer\ProductConcreteTransfer|null
      */

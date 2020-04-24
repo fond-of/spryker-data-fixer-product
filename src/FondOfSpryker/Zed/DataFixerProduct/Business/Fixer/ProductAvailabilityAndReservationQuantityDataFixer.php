@@ -2,6 +2,7 @@
 
 namespace FondOfSpryker\Zed\DataFixerProduct\Business\Fixer;
 
+use Exception;
 use FondOfSpryker\Shared\DataFixerProduct\DataFixerProductConstants;
 use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig;
@@ -75,13 +76,13 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     /**
      * ProductAvailabilityAndReservationQuantityDataFixer constructor.
      *
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface  $repository
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface  $queryContainer
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig  $config
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface  $productFacade
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface  $availabilityStorageFacade
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface  $stockFacade
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface  $storeFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface $repository
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface $queryContainer
+     * @param \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig $config
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface $productFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface $stockFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface $storeFacade
      */
     public function __construct(
         DataFixerProductRepositoryInterface $repository,
@@ -110,12 +111,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  array  $stores
+     * @param array $stores
      *
      * @return bool
-     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException
-     * @throws \Propel\Runtime\Exception\PropelException
-     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
      */
     public function fix(array $stores): bool
     {
@@ -130,12 +128,12 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  string  $storeName
-     * @param  int  $storeId
+     * @param string $storeName
+     * @param int $storeId
      *
-     * @return \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer
      * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException
      *
+     * @return \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer
      */
     public function prepareCriteriaFilter(string $storeName, int $storeId): DataFixerProductCriteriaFilterTransfer
     {
@@ -159,20 +157,18 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
      *
-     * @throws \Propel\Runtime\Exception\PropelException
-     * @throws \Spryker\Zed\Propel\Business\Exception\AmbiguousComparisonException
+     * @return void
      */
     protected function fixAvailabilityData(DataFixerProductCriteriaFilterTransfer $criteriaFilter): void
     {
         $publishIds = [];
         foreach ($this->repository->getWrongStoreAvailabilities($criteriaFilter) as $availability) {
             $availabilityAbstract = $availability->getSpyAvailabilityAbstract();
-
             try {
-                $stock = $this->getStock($criteriaFilter->getFkStore(), $availabilityAbstract->getAbstractSku());
-            } catch (\Exception $exception) {
+                $stock = $this->getStock($criteriaFilter->getFkStore(), $availability->getVirtualColumn('id_product'));
+            } catch (Exception $exception) {
                 $this->logException($exception);
                 continue;
             }
@@ -182,8 +178,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
                 $stock = $stock->getQuantity() > 0 ? $stock->getQuantity() : 0;
                 $this->updateAvailability($criteriaFilter, $availability, $stock);
                 $this->updateAvailabilityAbstract($criteriaFilter, $availabilityAbstract, $stock);
-            }
-            catch (\Exception $exception){
+            } catch (Exception $exception) {
                 $this->logException($exception);
                 continue;
             }
@@ -198,10 +193,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
      *
      * @return void
-     * @throws \Propel\Runtime\Exception\PropelException
      */
     protected function fixReservationData(DataFixerProductCriteriaFilterTransfer $criteriaFilter): void
     {
@@ -218,10 +212,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  int  $idStore
+     * @param int $idStore
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
-     * @throws \Spryker\Zed\Store\Business\Model\Exception\StoreNotFoundException
      */
     protected function getStore(int $idStore): StoreTransfer
     {
@@ -234,28 +227,27 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  int  $idStore
-     * @param  string  $skuProductAbstract
+     * @param int $idStore
+     * @param int $idProductConcrete
      *
-     * @return \Generated\Shared\Transfer\StockProductTransfer
      * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\ProductNotFoundException
      * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\StockNotFoundException
-     * @throws \Spryker\Zed\Store\Business\Model\Exception\StoreNotFoundException
+     *
+     * @return \Generated\Shared\Transfer\StockProductTransfer
      */
     protected function getStock(
         int $idStore,
-        string $skuProductAbstract
+        int $idProductConcrete
     ): StockProductTransfer {
-        $productId = $this->productFacade->findProductAbstractIdBySku($skuProductAbstract);
-        $product = $this->productFacade->findProductConcreteById($productId);
+        $product = $this->productFacade->findProductConcreteById($idProductConcrete);
 
         if ($product === null) {
-            throw new ProductNotFoundException(sprintf('No product concrete found with id %s in store with id %s', $productId, $idStore));
+            throw new ProductNotFoundException(sprintf('No product concrete found with id %s in store with id %s', $idProductConcrete, $idStore));
         }
 
         $store = $this->getStore($idStore);
 
-        $stocks = $this->stockFacade->findStockProductsByIdProductForStore($productId, $store);
+        $stocks = $this->stockFacade->findStockProductsByIdProductForStore($idProductConcrete, $store);
 
         foreach ($stocks as $stockProductTransfer) {
             if ($stockProductTransfer->getSku() === $product->getSku()) {
@@ -263,17 +255,18 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
             }
         }
 
-        throw new StockNotFoundException(sprintf('Stock for product concrete with idProductConcrete %s and sku %s not found! (Abstract SKU: %s)',
-            $productId, $product->getIdProductConcrete(), $skuProductAbstract));
+        throw new StockNotFoundException(sprintf(
+            'Stock for product concrete with idProductConcrete %s',
+            $idProductConcrete
+        ));
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
-     * @param  \Orm\Zed\Availability\Persistence\SpyAvailability  $availability
-     * @param  int  $stock
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
+     * @param \Orm\Zed\Availability\Persistence\SpyAvailability $availability
+     * @param int $stock
      *
      * @return void
-     * @throws \Propel\Runtime\Exception\PropelException
      */
     protected function updateAvailability(
         DataFixerProductCriteriaFilterTransfer $criteriaFilter,
@@ -292,11 +285,11 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
-     * @param  \Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract  $availabilityAbstract
-     * @param  int  $stock
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
+     * @param \Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract $availabilityAbstract
+     * @param int $stock
      *
-     * @throws \Propel\Runtime\Exception\PropelException
+     * @return void
      */
     protected function updateAvailabilityAbstract(
         DataFixerProductCriteriaFilterTransfer $criteriaFilter,
@@ -315,8 +308,8 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
-     * @param  array  $publishIds
+     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
+     * @param array $publishIds
      *
      * @return array
      */
@@ -337,13 +330,15 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param  \Exception  $exception
+     * @param \Exception $exception
      *
      * @return void
      */
-    protected function logException(\Exception $exception): void
+    protected function logException(Exception $exception): void
     {
-        $this->getLogger()->error(sprintf('%s: %s', $this->getName(), $exception->getMessage()),
-            $exception->getTrace());
+        $this->getLogger()->error(
+            sprintf('%s: %s', $this->getName(), $exception->getMessage()),
+            $exception->getTrace()
+        );
     }
 }

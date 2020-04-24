@@ -12,5 +12,4 @@ use Spryker\Zed\Kernel\Communication\AbstractCommunicationFactory;
  */
 class DataFixerProductCommunicationFactory extends AbstractCommunicationFactory
 {
-
 }

@@ -7,8 +7,8 @@ use Generated\Shared\Transfer\StoreTransfer;
 interface DataFixerProductToStockFacadeInterface
 {
     /**
-     * @param  int  $idProductConcrete
-     * @param  \Generated\Shared\Transfer\StoreTransfer  $storeTransfer
+     * @param int $idProductConcrete
+     * @param \Generated\Shared\Transfer\StoreTransfer $storeTransfer
      *
      * @return \Generated\Shared\Transfer\StockProductTransfer[]
      */
