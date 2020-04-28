@@ -7,6 +7,7 @@ use FondOfSpryker\Shared\DataFixerProduct\DataFixerProductConstants;
 use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface;
@@ -22,6 +23,7 @@ use Generated\Shared\Transfer\StoreTransfer;
 use Orm\Zed\Availability\Persistence\SpyAvailability;
 use Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract;
 use Spryker\Shared\Log\LoggerTrait;
+use Spryker\Shared\ProductStorage\ProductStorageConstants;
 
 class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInterface
 {
@@ -70,9 +72,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     protected $storeFacade;
 
     /**
-     * @var \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface
+     * @var \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface
      */
-    protected $productStorageFacade;
+    protected $eventBehaviorFacade;
 
     /**
      * @var \Generated\Shared\Transfer\StoreTransfer[]
@@ -89,7 +91,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
      * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface  $availabilityStorageFacade
      * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface  $stockFacade
      * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface  $storeFacade
-     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface  $productStorageFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface  $eventBehaviorFacade
      */
     public function __construct(
         DataFixerProductRepositoryInterface $repository,
@@ -99,7 +101,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade,
         DataFixerProductToStockFacadeInterface $stockFacade,
         DataFixerProductToStoreFacadeInterface $storeFacade,
-        DataFixerProductToProductStorageFacadeInterface $productStorageFacade
+        DataFixerProductToEventBehaviorFacadeInterface $eventBehaviorFacade
     ) {
         $this->repository = $repository;
         $this->queryContainer = $queryContainer;
@@ -108,7 +110,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         $this->stockFacade = $stockFacade;
         $this->storeFacade = $storeFacade;
         $this->availabilityStorageFacade = $availabilityStorageFacade;
-        $this->productStorageFacade = $productStorageFacade;
+        $this->eventBehaviorFacade = $eventBehaviorFacade;
     }
 
     /**
@@ -353,7 +355,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
      */
     protected function publishProductAbstract(array $productAbstractIds): array
     {
-        $this->productStorageFacade->publishAbstractProducts($productAbstractIds);
+        $this->eventBehaviorFacade->executeResolvedPluginsBySources([ProductStorageConstants::PRODUCT_ABSTRACT_RESOURCE_NAME], $productAbstractIds);
         $this->getLogger()->info(sprintf(
             '%s publish product abstract storage id(s) %s',
             $this->getName(),

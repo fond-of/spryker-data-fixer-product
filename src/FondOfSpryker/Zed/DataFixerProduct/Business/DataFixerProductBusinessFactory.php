@@ -7,6 +7,7 @@ use FondOfSpryker\Zed\DataFixerProduct\Business\Fixer\ProductAvailabilityAndRese
 use FondOfSpryker\Zed\DataFixerProduct\Business\Fixer\ProductAvailabilityAndReservationQuantityDataFixer;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductDependencyProvider;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface;
@@ -45,7 +46,7 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
             $this->getAvailabilityStorageFacade(),
             $this->getStockFacade(),
             $this->getStoreFacade(),
-            $this->getProductStorageFacade()
+            $this->getEventBehaviorFacade()
         );
     }
 
@@ -82,10 +83,11 @@ class DataFixerProductBusinessFactory extends AbstractBusinessFactory
     }
 
     /**
-     * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface
+     * @return \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface
+     * @throws \Spryker\Zed\Kernel\Exception\Container\ContainerKeyNotFoundException
      */
-    public function getProductStorageFacade(): DataFixerProductToProductStorageFacadeInterface
+    public function getEventBehaviorFacade(): DataFixerProductToEventBehaviorFacadeInterface
     {
-        return $this->getProvidedDependency(DataFixerProductDependencyProvider::FACADE_PRODUCT_STORAGE);
+        return $this->getProvidedDependency(DataFixerProductDependencyProvider::FACADE_EVENT_BEHAVIOR);
     }
 }

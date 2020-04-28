@@ -3,6 +3,7 @@
 namespace FondOfSpryker\Zed\DataFixerProduct;
 
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeBridge;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeBridge;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeBridge;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeBridge;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeBridge;
@@ -16,7 +17,7 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
     public const FACADE_AVAILABILITY_STORAGE = 'FACADE_AVAILABILITY_STORAGE';
     public const FACADE_STOCK = 'FACADE_STOCK';
     public const FACADE_STORE = 'FACADE_STORE';
-    public const FACADE_PRODUCT_STORAGE = 'FACADE_PRODUCT_STORAGE';
+    public const FACADE_EVENT_BEHAVIOR = 'FACADE_EVENT_BEHAVIOR';
 
     /**
      * @param \Spryker\Zed\Kernel\Container $container
@@ -29,7 +30,7 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
         $container = $this->addAvailabilityStorageFacade($container);
         $container = $this->addStockFacade($container);
         $container = $this->addStoreFacade($container);
-        $container = $this->addProductStorageFacade($container);
+        $container = $this->addEventBehaviorFacade($container);
         return $container;
     }
 
@@ -104,10 +105,10 @@ class DataFixerProductDependencyProvider extends AbstractBundleDependencyProvide
      *
      * @return \Spryker\Zed\Kernel\Container
      */
-    protected function addProductStorageFacade(Container $container): Container
+    protected function addEventBehaviorFacade(Container $container): Container
     {
-        $container[static::FACADE_PRODUCT_STORAGE] = function (Container $container) {
-            return new DataFixerProductToProductStorageFacadeBridge($container->getLocator()->productStorage()->facade());
+        $container[static::FACADE_EVENT_BEHAVIOR] = function (Container $container) {
+            return new DataFixerProductToEventBehaviorFacadeBridge($container->getLocator()->eventBehavior()->facade());
         };
 
         return $container;
