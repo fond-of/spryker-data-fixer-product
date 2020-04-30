@@ -4,19 +4,18 @@ namespace FondOfSpryker\Zed\DataFixerProduct\Business\Fixer;
 
 use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException;
 use FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface;
-use FondOfSpryker\Zed\Product\Business\ProductFacadeInterface;
 use Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer;
 use Spryker\Shared\Log\LoggerTrait;
-use Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface;
 
 class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
 {
     use LoggerTrait;
 
-    public const NAME = 'ProductAvailabilityAndReservation';
+    public const NAME = 'ProductAvailabilityAndReservationWrongStoreRelationRemover';
 
     /**
      * @var int
@@ -34,14 +33,9 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
     protected $repository;
 
     /**
-     * @var \Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface
+     * @var \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface
      */
     protected $availabilityStorageFacade;
-
-    /**
-     * @var \FondOfSpryker\Zed\Product\Business\ProductFacadeInterface
-     */
-    protected $productFacade;
 
     /**
      * @var \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig
@@ -52,21 +46,18 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
      * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface $repository
      * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface $queryContainer
      * @param \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig $config
-     * @param \FondOfSpryker\Zed\Product\Business\ProductFacadeInterface $productFacade
-     * @param \Spryker\Zed\AvailabilityStorage\Business\AvailabilityStorageFacadeInterface $availabilityStorageFacade
+     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade
      */
     public function __construct(
         DataFixerProductRepositoryInterface $repository,
         DataFixerProductQueryContainerInterface $queryContainer,
         DataFixerProductConfig $config,
-        ProductFacadeInterface $productFacade,
-        AvailabilityStorageFacadeInterface $availabilityStorageFacade
+        DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade
     ) {
         $this->repository = $repository;
         $this->queryContainer = $queryContainer;
         $this->config = $config;
         $this->availabilityStorageFacade = $availabilityStorageFacade;
-        $this->productFacade = $productFacade;
     }
 
     /**
@@ -109,7 +100,7 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
         $criteriaFilter = new DataFixerProductCriteriaFilterTransfer();
         $criteriaFilter->setFkStore($storeId);
 
-        if (!array_key_exists($storeId, $configData) | count($configData[$storeId]) === 0) {
+        if (!array_key_exists($storeId, $configData) || count($configData[$storeId]) === 0) {
             throw new SkuPrefixesNotConfiguredException(sprintf(
                 'No sku defined in config for %s with id %s',
                 $storeName,
@@ -132,7 +123,6 @@ class ProductAvailabilityAndReservationDataFixer implements DataFixerInterface
         $unpublishIds = [];
         foreach ($this->repository->getWrongStoreAvailabilities($criteriaFilter) as $availability) {
             $availabilityAbstract = $availability->getSpyAvailabilityAbstract();
-            $productId = $this->productFacade->findProductAbstractIdBySku($availabilityAbstract->getAbstractSku());
             $unpublishIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
             $availability->delete();
             $this->getLogger()->info(sprintf(
