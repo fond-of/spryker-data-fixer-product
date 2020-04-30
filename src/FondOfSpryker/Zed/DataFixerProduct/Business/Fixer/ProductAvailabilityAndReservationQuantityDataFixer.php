@@ -344,8 +344,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
             $criteriaFilter->getFkStore()
         ), $publishAvailabilityIds);
 
-        $publishAvailabilityIds = [];
-        return $publishAvailabilityIds;
+        return [];
     }
 
     /**
