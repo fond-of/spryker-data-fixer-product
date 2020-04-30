@@ -7,7 +7,9 @@ use FondOfSpryker\Shared\DataFixerProduct\DataFixerProductConstants;
 use FondOfSpryker\Zed\DataFixer\Business\Dependency\DataFixerInterface;
 use FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface;
+use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductStorageFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface;
 use FondOfSpryker\Zed\DataFixerProduct\Exception\ProductNotFoundException;
@@ -21,6 +23,7 @@ use Generated\Shared\Transfer\StoreTransfer;
 use Orm\Zed\Availability\Persistence\SpyAvailability;
 use Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract;
 use Spryker\Shared\Log\LoggerTrait;
+use Spryker\Shared\ProductStorage\ProductStorageConstants;
 
 class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInterface
 {
@@ -69,6 +72,11 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     protected $storeFacade;
 
     /**
+     * @var \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface
+     */
+    protected $eventBehaviorFacade;
+
+    /**
      * @var \Generated\Shared\Transfer\StoreTransfer[]
      */
     protected $storeCache = [];
@@ -76,13 +84,14 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     /**
      * ProductAvailabilityAndReservationQuantityDataFixer constructor.
      *
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface $repository
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface $queryContainer
-     * @param \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig $config
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface $productFacade
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface $stockFacade
-     * @param \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface $storeFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductRepositoryInterface  $repository
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Persistence\DataFixerProductQueryContainerInterface  $queryContainer
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\DataFixerProductConfig  $config
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToProductFacadeInterface  $productFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToAvailabilityStorageFacadeInterface  $availabilityStorageFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStockFacadeInterface  $stockFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToStoreFacadeInterface  $storeFacade
+     * @param  \FondOfSpryker\Zed\DataFixerProduct\Dependency\Facade\DataFixerProductToEventBehaviorFacadeInterface  $eventBehaviorFacade
      */
     public function __construct(
         DataFixerProductRepositoryInterface $repository,
@@ -91,7 +100,8 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         DataFixerProductToProductFacadeInterface $productFacade,
         DataFixerProductToAvailabilityStorageFacadeInterface $availabilityStorageFacade,
         DataFixerProductToStockFacadeInterface $stockFacade,
-        DataFixerProductToStoreFacadeInterface $storeFacade
+        DataFixerProductToStoreFacadeInterface $storeFacade,
+        DataFixerProductToEventBehaviorFacadeInterface $eventBehaviorFacade
     ) {
         $this->repository = $repository;
         $this->queryContainer = $queryContainer;
@@ -100,6 +110,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         $this->stockFacade = $stockFacade;
         $this->storeFacade = $storeFacade;
         $this->availabilityStorageFacade = $availabilityStorageFacade;
+        $this->eventBehaviorFacade = $eventBehaviorFacade;
     }
 
     /**
@@ -111,7 +122,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param array $stores
+     * @param  array  $stores
      *
      * @return bool
      */
@@ -128,12 +139,12 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param string $storeName
-     * @param int $storeId
-     *
-     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException
+     * @param  string  $storeName
+     * @param  int  $storeId
      *
      * @return \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer
+     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\SkuPrefixesNotConfiguredException
+     *
      */
     public function prepareCriteriaFilter(string $storeName, int $storeId): DataFixerProductCriteriaFilterTransfer
     {
@@ -157,13 +168,14 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
+     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
      *
      * @return void
      */
     protected function fixAvailabilityData(DataFixerProductCriteriaFilterTransfer $criteriaFilter): void
     {
-        $publishIds = [];
+        $publishAvailabilityIds = [];
+        $publishProductAbstractIds = [];
         foreach ($this->repository->getWrongStoreAvailabilities($criteriaFilter) as $availability) {
             $availabilityAbstract = $availability->getSpyAvailabilityAbstract();
             try {
@@ -173,8 +185,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
                 continue;
             }
 
-            $publishIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
             try {
+                $publishAvailabilityIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
+                $publishProductAbstractIds[] = $availability->getVirtualColumn('id_product_abstract');
                 $stock = $stock->getQuantity() > 0 ? $stock->getQuantity() : 0;
                 $this->updateAvailability($criteriaFilter, $availability, $stock);
                 $this->updateAvailabilityAbstract($criteriaFilter, $availabilityAbstract, $stock);
@@ -183,17 +196,19 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
                 continue;
             }
 
-            if (count($publishIds) === $this->publishCollectionCount) {
-                $publishIds = $this->publishAvailability($criteriaFilter, $publishIds);
+            if (count($publishAvailabilityIds) === $this->publishCollectionCount) {
+                $publishAvailabilityIds = $this->publishAvailability($criteriaFilter, $publishAvailabilityIds);
+                $publishProductAbstractIds = $this->publishProductAbstract($publishProductAbstractIds);
             }
         }
-        if (count($publishIds) > 0) {
-            $this->publishAvailability($criteriaFilter, $publishIds);
+        if (count($publishAvailabilityIds) > 0) {
+            $this->publishAvailability($criteriaFilter, $publishAvailabilityIds);
+            $this->publishProductAbstract($publishProductAbstractIds);
         }
     }
 
     /**
-     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
+     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
      *
      * @return void
      */
@@ -212,7 +227,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param int $idStore
+     * @param  int  $idStore
      *
      * @return \Generated\Shared\Transfer\StoreTransfer
      */
@@ -227,13 +242,13 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param int $idStore
-     * @param int $idProductConcrete
-     *
-     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\ProductNotFoundException
-     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\StockNotFoundException
+     * @param  int  $idStore
+     * @param  int  $idProductConcrete
      *
      * @return \Generated\Shared\Transfer\StockProductTransfer
+     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\ProductNotFoundException
+     *
+     * @throws \FondOfSpryker\Zed\DataFixerProduct\Exception\StockNotFoundException
      */
     protected function getStock(
         int $idStore,
@@ -242,7 +257,11 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         $product = $this->productFacade->findProductConcreteById($idProductConcrete);
 
         if ($product === null) {
-            throw new ProductNotFoundException(sprintf('No product concrete found with id %s in store with id %s', $idProductConcrete, $idStore));
+            throw new ProductNotFoundException(sprintf(
+                'No product concrete found with id %s in store with id %s',
+                $idProductConcrete,
+                $idStore
+            ));
         }
 
         $store = $this->getStore($idStore);
@@ -262,9 +281,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
-     * @param \Orm\Zed\Availability\Persistence\SpyAvailability $availability
-     * @param int $stock
+     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
+     * @param  \Orm\Zed\Availability\Persistence\SpyAvailability  $availability
+     * @param  int  $stock
      *
      * @return void
      */
@@ -285,9 +304,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
-     * @param \Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract $availabilityAbstract
-     * @param int $stock
+     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
+     * @param  \Orm\Zed\Availability\Persistence\SpyAvailabilityAbstract  $availabilityAbstract
+     * @param  int  $stock
      *
      * @return void
      */
@@ -308,29 +327,44 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     }
 
     /**
-     * @param \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer $criteriaFilter
-     * @param array $publishIds
+     * @param  \Generated\Shared\Transfer\DataFixerProductCriteriaFilterTransfer  $criteriaFilter
+     * @param  array  $publishAvailabilityIds
      *
      * @return array
      */
     protected function publishAvailability(
         DataFixerProductCriteriaFilterTransfer $criteriaFilter,
-        array $publishIds
+        array $publishAvailabilityIds
     ): array {
-        $this->availabilityStorageFacade->publish($publishIds);
+        $this->availabilityStorageFacade->publish($publishAvailabilityIds);
         $this->getLogger()->info(sprintf(
             '%s publish availability storage id(s) %s in store %s',
             $this->getName(),
-            implode(',', $publishIds),
+            implode(',', $publishAvailabilityIds),
             $criteriaFilter->getFkStore()
-        ), $publishIds);
+        ), $publishAvailabilityIds);
 
-        $publishIds = [];
-        return $publishIds;
+        return [];
     }
 
     /**
-     * @param \Exception $exception
+     * @param  array  $productAbstractIds
+     *
+     * @return array
+     */
+    protected function publishProductAbstract(array $productAbstractIds): array
+    {
+        $this->eventBehaviorFacade->executeResolvedPluginsBySources([ProductStorageConstants::PRODUCT_ABSTRACT_RESOURCE_NAME], $productAbstractIds);
+        $this->getLogger()->info(sprintf(
+            '%s publish product abstract storage id(s) %s',
+            $this->getName(),
+            implode(',', $productAbstractIds)
+        ), $productAbstractIds);
+        return [];
+    }
+
+    /**
+     * @param  \Exception  $exception
      *
      * @return void
      */
