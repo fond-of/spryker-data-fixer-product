@@ -188,7 +188,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
             try {
                 $publishAvailabilityIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
                 $publishProductAbstractIds[] = $availability->getVirtualColumn('id_product_abstract');
-                $stock = $stock->getQuantity() > 0 ? $stock->getQuantity() : 0;
+                $stock = $stock->getQuantity()->trim()->toInt() > 0 ? $stock->getQuantity()->trim()->toInt() : 0;
                 $this->updateAvailability($criteriaFilter, $availability, $stock);
                 $this->updateAvailabilityAbstract($criteriaFilter, $availabilityAbstract, $stock);
             } catch (Exception $exception) {
@@ -371,7 +371,7 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     protected function logException(Exception $exception): void
     {
         $this->getLogger()->error(
-            sprintf('%s: %s', $this->getName(), $exception->getMessage()),
+            sprintf('%s: %s => %s', $this->getName(), $exception->getMessage(), $exception->getTraceAsString()),
             $exception->getTrace()
         );
     }
