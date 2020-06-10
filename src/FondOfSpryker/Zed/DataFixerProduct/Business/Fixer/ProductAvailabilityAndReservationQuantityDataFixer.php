@@ -275,8 +275,9 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
         }
 
         throw new StockNotFoundException(sprintf(
-            'Stock for product concrete with idProductConcrete %s',
-            $idProductConcrete
+            'Stock for product concrete with idProductConcrete %s in store %s not found!',
+            $idProductConcrete,
+            $store->getName()
         ));
     }
 
