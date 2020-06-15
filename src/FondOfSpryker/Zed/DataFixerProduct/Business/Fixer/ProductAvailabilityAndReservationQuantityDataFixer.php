@@ -186,11 +186,14 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
             }
 
             try {
-                $publishAvailabilityIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
-                $publishProductAbstractIds[] = $availability->getVirtualColumn('id_product_abstract');
-                $stock = $stock->getQuantity()->trim()->toInt() > 0 ? $stock->getQuantity()->trim()->toInt() : 0;
-                $this->updateAvailability($criteriaFilter, $availability, $stock);
-                $this->updateAvailabilityAbstract($criteriaFilter, $availabilityAbstract, $stock);
+                $stock = $stock->getQuantity()->trim()->toInt();
+                if ($stock !== (int)$availabilityAbstract->getQuantity()){
+                    $publishAvailabilityIds[] = $availabilityAbstract->getIdAvailabilityAbstract();
+                    $publishProductAbstractIds[] = $availability->getVirtualColumn('id_product_abstract');
+                    $stock = $stock > 0 ? $stock : 0;
+                    $this->updateAvailability($criteriaFilter, $availability, $stock);
+                    $this->updateAvailabilityAbstract($criteriaFilter, $availabilityAbstract, $stock);
+                }
             } catch (Exception $exception) {
                 $this->logException($exception);
                 continue;
@@ -215,14 +218,16 @@ class ProductAvailabilityAndReservationQuantityDataFixer implements DataFixerInt
     protected function fixReservationData(DataFixerProductCriteriaFilterTransfer $criteriaFilter): void
     {
         foreach ($this->repository->getWrongStoreReservations($criteriaFilter) as $productReservation) {
-            $productReservation->setReservationQuantity(0);
-            $productReservation->save();
-            $this->getLogger()->info(sprintf(
-                '%s reset product reservation %s in store %s to 0',
-                $this->getName(),
-                $productReservation->getSku(),
-                $criteriaFilter->getFkStore()
-            ), $productReservation->toArray());
+            if ((int)$productReservation->getReservationQuantity() > 0){
+                $productReservation->setReservationQuantity(0);
+                $productReservation->save();
+                $this->getLogger()->info(sprintf(
+                    '%s reset product reservation %s in store %s to 0',
+                    $this->getName(),
+                    $productReservation->getSku(),
+                    $criteriaFilter->getFkStore()
+                ), $productReservation->toArray());
+            }
         }
     }
 
